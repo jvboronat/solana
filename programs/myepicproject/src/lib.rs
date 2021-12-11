@@ -15,6 +15,36 @@ pub mod myepicproject {
     Ok(())
   }
 
+  pub fn update_item(ctx: Context<AddGif>, gif_link: String, action: String) -> ProgramResult {
+
+    let base_account = &mut ctx.accounts.base_account;
+
+    for gif in base_account.gif_list.iter_mut()
+    {
+
+      if action=="like"
+      {
+        if gif.gif_link == gif_link
+        {
+          gif.votes = gif.votes +1; 
+          
+       }    
+      }
+      else {
+        if gif.gif_link == gif_link
+        {
+          gif.votes = gif.votes - 1; 
+          
+       }  
+
+      }   
+
+    }    
+
+    Ok(())
+
+  } 
+
   	// Another function woo!
     // Every time we define a fun we need to creat a context
     pub fn add_gif(ctx: Context<AddGif>, gif_link: String) -> ProgramResult {
@@ -27,6 +57,7 @@ pub mod myepicproject {
       let item = ItemStruct {
           gif_link: gif_link.to_string(),
           user_address: *user.to_account_info().key,
+          votes: 0,
         } ;  
     
 	    // Add it to the gif_list vector.
@@ -62,6 +93,7 @@ pub struct AddGif<'info> {
 pub struct ItemStruct {
     pub gif_link: String,
     pub user_address: Pubkey,
+    pub votes: u32,
 }
 
 // Tell Solana what we want to store on this account.
